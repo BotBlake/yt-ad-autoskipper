@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "esnext",
     "lib": ["esnext", "dom"],
     "importHelpers": true,
@@ -9,7 +9,7 @@
     "strict": true,
     "strictFunctionTypes": true,
     "alwaysStrict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
