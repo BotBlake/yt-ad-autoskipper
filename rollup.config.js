@@ -35,14 +35,6 @@ export default [
     plugins: [...commonPlugins],
   },
   {
-    input: "src/contentScripts/adskipper/index.ts",
-    output: {
-      file: "build/adskipper.js",
-      format: "cjs",
-    },
-    plugins: [...commonPlugins],
-  },
-  {
     input: "src/backgroundScripts/index.ts",
     output: {
       file: "build/background.js",

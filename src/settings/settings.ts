@@ -1,14 +1,9 @@
 import { AdsChannelList } from "./channelsList";
-import { API } from "../constants/api";
-import { getSubscription } from "../utils/config";
 import { logger } from "../utils/logger";
-import { AuthUser } from "../utils/types";
 import { AdsChannelPref } from "./channelPref";
 import { AdsChannelPrefForm } from "./channelPrefForm";
-import { AdsLicense } from "./license";
 
 type State = {
-  user: AuthUser | null;
   page: "pref" | "channel";
   pageProps: Record<string, unknown>;
 };
@@ -47,23 +42,12 @@ h2.title {
   text-transform: uppercase;
 }
 
-p {
+.container p {
   margin: 0;
   margin-top: 0.5em;
   font-size: 0.8em;
   opacity: 0.5;
   text-transform: none;
-}
-
-.pref-disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.license-footer {
-  opacity: 0.5;
-  font-size: 0.9em;
-  text-align: center;
 }
 `;
 
@@ -71,10 +55,7 @@ const template = `
 <div class="container">
   <h1>Youtube Ad Auto-skipper</h1>
   <slot name="config">
-    <slot name="license">
-      <${AdsLicense.elementName} />
-    </slot>
-    <div class="can-disable">
+    <div>
       <h2 class="title">
         Global Preferences
         <p>
@@ -84,7 +65,7 @@ const template = `
       </h2>
       <${AdsChannelPrefForm.elementName} />
     </div>
-    <div class="can-disable">
+    <div>
       <h2 class="title">
         Channel Preferences
         <p>
@@ -99,15 +80,6 @@ const template = `
       </h2>
       <${AdsChannelList.elementName} />
     </div>
-    <slot name="license-footer">
-      <div class="license-footer">
-        <p>
-          You support the development of this extension with an annual payment.
-          <br>
-          <a href="${API.CANCEL}">Click here to cancel future payments.</a>
-        </p>
-      </div>
-    </slot>
   </slot>
 </div>`;
 
@@ -115,7 +87,6 @@ class AdsSettings extends HTMLElement {
   static elementName = "ads-settings";
 
   _state: State = {
-    user: null,
     page: "pref",
     pageProps: {},
   };
@@ -135,15 +106,12 @@ class AdsSettings extends HTMLElement {
   connectedCallback() {
     this.attachListenerForPageChange();
 
-    Promise.all([this.getUserFromStorage(), this.getPageFromStorage()]).then(
-      ([user, { page, pageProps }]) => {
-        this.state = {
-          user,
-          page,
-          pageProps,
-        };
-      }
-    );
+    this.getPageFromStorage().then(({ page, pageProps }) => {
+      this.state = {
+        page,
+        pageProps,
+      };
+    });
   }
 
   get state(): State {
@@ -159,11 +127,9 @@ class AdsSettings extends HTMLElement {
   }
 
   render = () => {
-    const user = this.state.user;
-
     this.innerHTML = "";
 
-    if (this.state.page === "channel" && user) {
+    if (this.state.page === "channel") {
       const { channelId, channelName, imageUrl } = this.state.pageProps;
 
       const slot = document.createElement("slot");
@@ -180,31 +146,6 @@ class AdsSettings extends HTMLElement {
 
       return;
     }
-
-    if (user) {
-      const license = document.createElement(AdsLicense.elementName);
-      license.slot = "license";
-      license.setAttribute("user", user?.displayName);
-      this.append(license);
-    }
-
-    if (!user) {
-      Array.from(
-        this.shadowRoot?.querySelectorAll(".can-disable") || []
-      ).forEach((elem) => {
-        elem.className = "pref-disabled";
-      });
-      const slot = document.createElement("slot");
-      slot.slot = "license-footer";
-      this.append(slot);
-    }
-  };
-
-  getUserFromStorage = async () => {
-    const subscription = await getSubscription();
-    logger.debug("subscription", subscription);
-
-    return subscription?.user || null;
   };
 
   getPageFromStorage = async () => {
