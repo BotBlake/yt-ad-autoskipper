@@ -1,7 +1,4 @@
-import {
-  getIsSkipSkippingEnabled,
-  getTimeToSkipAdOffset,
-} from "../../utils/config";
+import { getTimeToSkipAdOffset } from "../../utils/config";
 import { addMilliseconds } from "../../utils/datetime";
 import { logger } from "../../utils/logger";
 import { Events, YouTubeEvents } from "../../utils/youtubeEvents";
@@ -10,7 +7,6 @@ import { EventHandler } from "../../utils/types";
 
 export class VideoAdSkipper implements EventHandler {
   #skipAt: Date | null = null;
-  #enableSkipSkipping = false;
 
   public setupListeners(): void {
     YouTubeEvents.addListener(Events.adPlayStarted, () => this.scheduleClick());
@@ -30,7 +26,6 @@ export class VideoAdSkipper implements EventHandler {
   private async scheduleClick(): Promise<void> {
     const { channelId } = getChannelInfo();
     const skipAdTime = await getTimeToSkipAdOffset(channelId);
-    this.#enableSkipSkipping = await getIsSkipSkippingEnabled();
 
     if (skipAdTime < 0) {
       logger.debug("not skipping ad");
@@ -76,22 +71,13 @@ export class VideoAdSkipper implements EventHandler {
     link.style.color = "inherit";
     link.style.textDecoration = "none";
     link.style.borderBottom = "1px solid";
-    link.textContent = `Click here to not skip this ad. ${
-      this.#enableSkipSkipping ? "" : "🔒"
-    }`;
+    link.textContent = "Click here to not skip this ad.";
     link.onclick = () => {
-      if (this.#enableSkipSkipping) {
-        logger.debug("skipping ad skipping.");
-        this.teardown();
-      }
+      logger.debug("skipping ad skipping.");
+      this.teardown();
 
       return false;
     };
-
-    if (!this.#enableSkipSkipping) {
-      newCountdown.title =
-        "This feature is locked. Please go to extension settings to enable it.";
-    }
 
     newCountdown.append(newText, link);
 
