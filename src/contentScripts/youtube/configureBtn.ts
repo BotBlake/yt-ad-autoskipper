@@ -53,8 +53,12 @@ export class ConfigureChannelBtn implements EventHandler {
     div.style.justifyContent = "center";
 
     const isDarkTheme = document.documentElement.hasAttribute("dark");
-    const background = isDarkTheme ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
-    const backgroundHover = isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)";
+    const background = isDarkTheme
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(0, 0, 0, 0.05)";
+    const backgroundHover = isDarkTheme
+      ? "rgba(255, 255, 255, 0.2)"
+      : "rgba(0, 0, 0, 0.1)";
     const textColor = isDarkTheme ? "#f1f1f1" : "#0f0f0f";
 
     const btn = document.createElement("button");

@@ -133,13 +133,14 @@ export class AdsChannelList extends HTMLElement {
 
     this.innerHTML = "";
 
-    const ul = this.shadowRoot.querySelector("ul") || document.createElement("ul");
+    const ul =
+      this.shadowRoot.querySelector("ul") || document.createElement("ul");
 
     if (!this.state.channels?.length) {
       return;
     }
 
-    ul && (ul.innerHTML = "");
+    if (ul) ul.innerHTML = "";
 
     for (const channel of this.state.channels) {
       const li = document.createElement("li");
@@ -169,7 +170,7 @@ export class AdsChannelList extends HTMLElement {
       ul?.append(li);
     }
 
-    ul.parentElement || this.shadowRoot.prepend(ul);
+    if (!ul.parentElement) this.shadowRoot.prepend(ul);
     this.innerHTML = `<slot slot="empty-list"></slot>`;
   };
 }

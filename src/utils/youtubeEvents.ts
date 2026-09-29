@@ -70,7 +70,7 @@ const startMainLoop = () => {
       currentAd = adPlaying;
     }
 
-    eventsToCall.length && logger.debug("Events", eventsToCall);
+    if (eventsToCall.length) logger.debug("Events", eventsToCall);
 
     // tick
     eventsToCall.push(Events.tick);
