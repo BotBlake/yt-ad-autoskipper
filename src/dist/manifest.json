@@ -22,7 +22,8 @@
     }
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
   },
   "action": {
     "default_title": "Configure Ad Auto Skipper"
@@ -31,5 +32,17 @@
   "permissions": ["storage"],
   "icons": {
     "128": "logo.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "yt-ad-autoskipper@botblake.github.io",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
+    }
   }
 }
