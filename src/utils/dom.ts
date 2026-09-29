@@ -6,7 +6,7 @@
 export function isInIframe(): boolean {
   try {
     return window.self !== window.top;
-  } catch (e) {
+  } catch {
     // The browser did not let us access the parent window. Which also means we
     // are in an iframe.
     return true;

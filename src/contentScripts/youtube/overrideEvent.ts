@@ -4,7 +4,7 @@ import { skipButtonClasses } from "../../utils/youtubeDOM";
 type Callable = <T>(args: T) => unknown;
 
 const getEventHandler = (listener: Callable) =>
-  function handleEvent(e: any) {
+  function handleEvent(e: Record<string, unknown>) {
     const handler = {
       get(_: unknown, prop: string) {
         if (prop === "isTrusted") {
@@ -14,7 +14,7 @@ const getEventHandler = (listener: Callable) =>
         if (typeof e[prop] === "function") {
           return function (...args: unknown[]) {
             // Implement your dynamic logic for method calls
-            return e[prop](...args);
+            return (e[prop] as (...callArgs: unknown[]) => unknown)(...args);
           };
         }
 

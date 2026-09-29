@@ -165,8 +165,8 @@ export class AdsChannelPrefForm extends HTMLElement {
       this.shadowRoot.querySelector<HTMLInputElement>("input[name=mutead]");
     if (toggleMuteInput) {
       toggleMuteInput.onchange = this.toggleIsMute;
-      this.props.isDisabled && toggleMuteInput.setAttribute("disabled", "");
-      this.state.isMute && toggleMuteInput.setAttribute("checked", "");
+      if (this.props.isDisabled) toggleMuteInput.setAttribute("disabled", "");
+      if (this.state.isMute) toggleMuteInput.setAttribute("checked", "");
     }
 
     const skipSecsInput = this.shadowRoot.querySelector<HTMLInputElement>(
@@ -175,7 +175,7 @@ export class AdsChannelPrefForm extends HTMLElement {
     if (skipSecsInput) {
       skipSecsInput.setAttribute("value", "" + this.state.skipSecs);
       skipSecsInput.onchange = this.updateSkipSecs;
-      this.props.isDisabled && skipSecsInput.setAttribute("disabled", "");
+      if (this.props.isDisabled) skipSecsInput.setAttribute("disabled", "");
     }
   };
 
