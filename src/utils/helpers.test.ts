@@ -68,14 +68,7 @@ describe("deepmerge", () => {
 
   it("ignores non-object arguments", () => {
     expect(
-      deepmerge(
-        { a: 1 },
-        null,
-        undefined,
-        "not an object",
-        123,
-        { b: 2 }
-      )
+      deepmerge({ a: 1 }, null, undefined, "not an object", 123, { b: 2 })
     ).toEqual({
       a: 1,
       b: 2,
