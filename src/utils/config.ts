@@ -1,8 +1,6 @@
 import { deepmerge } from "./helpers";
 import { logger } from "./logger";
 
-import { Subscription } from "./types";
-
 type TimeToSkipConfig = {
   timeToSkip: number;
 };
@@ -36,19 +34,10 @@ export const DEFAULT_CONFIG: ConfigObj = Object.freeze({
   channelConfigs: {},
 });
 
-export async function getSubscription(): Promise<Subscription | null> {
-  const { subscription } = await chrome.storage.local.get(["subscription"]);
-
-  return subscription;
-}
-
 export async function getConfig(): Promise<ConfigObj> {
-  const { config, subscription } = await chrome.storage.local.get([
-    "config",
-    "subscription",
-  ]);
+  const { config } = await chrome.storage.local.get(["config"]);
 
-  if (!config || !subscription?.subscriptionId) {
+  if (!config) {
     return DEFAULT_CONFIG;
   }
 
@@ -56,13 +45,6 @@ export async function getConfig(): Promise<ConfigObj> {
 }
 
 async function setConfig(config: ConfigObj): Promise<void> {
-  const subscription = await getSubscription();
-
-  if (!subscription?.subscriptionId) {
-    logger.debug("not setting config because user does not have subscription.");
-    return;
-  }
-
   return await chrome.storage.local.set({ config });
 }
 
@@ -156,12 +138,6 @@ export async function setShouldMuteAd(
   await mergeChannelConfig(scope, configAddition);
 
   return getShouldMuteAd();
-}
-
-export async function getIsSkipSkippingEnabled(): Promise<boolean> {
-  const subscription = await getSubscription();
-
-  return !!subscription?.user;
 }
 
 export async function getChannelConfig(
