@@ -9,14 +9,14 @@ This is a detached fork of [squgeim/yt-ad-autoskipper](https://github.com/squgei
 ## Download
 
 Builds are currently not yet available whilst I figure out how to properly target Firefox and Chrome.
-In the meantime all you can do is clone this repository and run `npm build`.
+In the meantime all you can do is clone this repository and run `npm run build`.
 
 ## ToDo
 
 I forked the original Project because it was no longer working for me and wanted to look into fixing it myself. I am not very experienced in TypeScript or Browser Plugin development, so please bear with me whilst I'll figure it out. You can see what I have planned for this Project below:
 
-- [] fully re-enable subscribtion service (some pro features where hidden behind a paywall) https://github.com/BotBlake/yt-ad-autoskipper/pull/5
-- Fix some issues caused by new YouTube layout
+- [X] fully re-enable hidden features (some pro features where hidden behind a paywall)
+- [X] Visibility of configuration button within YouTube
 - [] migrate to Universal Browser API instead of Chrome-exclusive API (allthough firefox also supports that)
-- [] figure out a proper release process and automate it via GHA
+- [X] figure out a proper release process and automate it via GHA
 - [] Release on Chrome/Firefox Plugin store (?)
