@@ -24,7 +24,7 @@ export function deepmerge<T extends Record<string, unknown>>(
       if (isObject(val) && key in newObj) {
         newObj = {
           ...newObj,
-          [key]: deepmerge(val, newObj[key]),
+          [key]: deepmerge(newObj[key], val),
         };
       } else {
         newObj = {
