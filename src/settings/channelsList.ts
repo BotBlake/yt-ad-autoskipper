@@ -64,12 +64,12 @@ const TEMPLATE = `
   <div class="pref-box empty-channel-list">
     <p>You have not configured any channels yet!</p>
     <p>
-      Find Ad Skipper besides the Subscribe button when watching a YouTube
+      Find Ad Skipper below the video description when watching a YouTube
       video. Click on it to configure the extension for that channel.
     </p>
     <img
       src="./preview.png"
-      alt="Pointing out Ad Skipper button besides Subscribe button in YouTube."
+      alt="Pointing out Ad Skipper button below the video description in YouTube."
     />
   </div>
 </slot>
