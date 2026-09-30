@@ -133,14 +133,17 @@ export class AdsChannelList extends HTMLElement {
 
     this.replaceChildren();
 
-    const ul =
-      this.shadowRoot.querySelector("ul") || document.createElement("ul");
+    let ul = this.shadowRoot.querySelector("ul");
 
     if (!this.state.channels?.length) {
+      ul?.remove();
+
       return;
     }
 
-    if (ul) ul.replaceChildren();
+    if (!ul) ul = document.createElement("ul");
+
+    ul.replaceChildren();
 
     for (const channel of this.state.channels) {
       const li = document.createElement("li");
@@ -172,7 +175,7 @@ export class AdsChannelList extends HTMLElement {
         removeChannel(channel.channelId);
       };
       li.append(btn);
-      ul?.append(li);
+      ul.append(li);
     }
 
     if (!ul.parentElement) this.shadowRoot.prepend(ul);
