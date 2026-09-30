@@ -21,21 +21,27 @@ const callbacks: Record<string, Callback[]> = EventNames.reduce(
   {}
 );
 
+// Reads the ad label straight from the player's DOM. Returns undefined when
+// no ad is currently playing.
+const getAdLabel = (): string | undefined =>
+  document
+    .querySelector(".ytp-ad-visit-advertiser-button")
+    ?.getAttribute("aria-label") ??
+  document
+    .querySelector(".ytp-visit-advertiser-link")
+    ?.getAttribute("aria-label") ??
+  document.querySelector(".ytp-ad-badge")?.textContent ??
+  undefined;
+
+const MIN_EVALUATE_INTERVAL_MS = 200;
+
 const startMainLoop = () => {
   let currentAd: string | undefined;
   let currentLoc = document.location.href;
 
-  mainLoop(async () => {
+  const evaluate = () => {
     const nextLoc = document.location.href;
-    const adPlaying =
-      document
-        .querySelector(".ytp-ad-visit-advertiser-button")
-        ?.getAttribute("aria-label") ??
-      document
-        .querySelector(".ytp-visit-advertiser-link")
-        ?.getAttribute("aria-label") ??
-      document.querySelector(".ytp-ad-badge")?.textContent ??
-      undefined;
+    const adPlaying = getAdLabel();
     const eventsToCall: Events[] = [];
     const cbArg = [
       { ad: currentAd, location: currentLoc },
@@ -72,14 +78,69 @@ const startMainLoop = () => {
 
     if (eventsToCall.length) logger.debug("Events", eventsToCall);
 
-    // tick
-    eventsToCall.push(Events.tick);
-
     // Dispatch all events
     eventsToCall.forEach((evt) => {
       callbacks[evt].forEach((cb) => {
         cb(cbArg[0], cbArg[1]);
       });
+    });
+  };
+
+  let lastEvaluateAt = 0;
+  let evaluateTimer: ReturnType<typeof setTimeout> | undefined;
+  const scheduleEvaluate = () => {
+    if (evaluateTimer) return;
+
+    const elapsed = Date.now() - lastEvaluateAt;
+    const delay = Math.max(0, MIN_EVALUATE_INTERVAL_MS - elapsed);
+
+    evaluateTimer = setTimeout(() => {
+      evaluateTimer = undefined;
+      lastEvaluateAt = Date.now();
+      evaluate();
+    }, delay);
+  };
+
+  const observer = new MutationObserver(scheduleEvaluate);
+  let observedPlayer = false;
+  const observeTarget = () => {
+    const player = document.querySelector("#movie_player");
+
+    observer.observe(player ?? document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["aria-label", "class"],
+    });
+    observedPlayer = !!player;
+  };
+  observeTarget();
+
+  // Once the player element becomes available, re-attach the observer to it
+  // so we stop watching the whole document.
+  const upgradeObserverIfNeeded = () => {
+    if (!observedPlayer && document.querySelector("#movie_player")) {
+      observer.disconnect();
+      observeTarget();
+    }
+  };
+
+  // YouTube's SPA router dispatches these events on navigation; popstate is
+  // kept as a fallback for back/forward navigation.
+  window.addEventListener("yt-navigate-finish", scheduleEvaluate);
+  window.addEventListener("popstate", scheduleEvaluate);
+
+  evaluate();
+  lastEvaluateAt = Date.now();
+
+  mainLoop(async () => {
+    upgradeObserverIfNeeded();
+
+    callbacks[Events.tick].forEach((cb) => {
+      cb(
+        { ad: currentAd, location: currentLoc },
+        { ad: currentAd, location: currentLoc }
+      );
     });
   }, 200);
 };
