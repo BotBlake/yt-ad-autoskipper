@@ -131,7 +131,7 @@ export class AdsChannelList extends HTMLElement {
   render = () => {
     if (!this.shadowRoot) return;
 
-    this.innerHTML = "";
+    this.replaceChildren();
 
     const ul =
       this.shadowRoot.querySelector("ul") || document.createElement("ul");
@@ -140,7 +140,7 @@ export class AdsChannelList extends HTMLElement {
       return;
     }
 
-    if (ul) ul.innerHTML = "";
+    if (ul) ul.replaceChildren();
 
     for (const channel of this.state.channels) {
       const li = document.createElement("li");
@@ -151,12 +151,17 @@ export class AdsChannelList extends HTMLElement {
           channel: channel,
         });
       };
-      li.innerHTML = `
-        <img src=${channel.imageUrl} alt="" />
-        <span class="label">
-          ${channel.channelName}
-        </span>
-      `;
+
+      const img = document.createElement("img");
+      img.src = channel.imageUrl;
+      img.alt = "";
+
+      const label = document.createElement("span");
+      label.className = "label";
+      label.textContent = channel.channelName;
+
+      li.append(img, label);
+
       const btn = document.createElement("button");
       btn.className = "remove-channel-btn";
       btn.setAttribute("role", "button");
@@ -171,7 +176,10 @@ export class AdsChannelList extends HTMLElement {
     }
 
     if (!ul.parentElement) this.shadowRoot.prepend(ul);
-    this.innerHTML = `<slot slot="empty-list"></slot>`;
+
+    const emptyListOverride = document.createElement("slot");
+    emptyListOverride.slot = "empty-list";
+    this.replaceChildren(emptyListOverride);
   };
 }
 

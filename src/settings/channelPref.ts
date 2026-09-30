@@ -81,16 +81,24 @@ export class AdsChannelPref extends HTMLElement {
       });
     });
 
-    this.innerHTML = `
-      <slot slot="channel-pref-title">${channelName}</slot>
-      <img slot="channel-logo" src="${imageUrl}" alt="" />
-      <${AdsChannelPrefForm.elementName}
-        slot="channel-pref-form"
-        channel-id="${channelId}"
-        channel-name="${channelName}"
-        image-url="${imageUrl}"
-      />
-    `;
+    this.replaceChildren();
+
+    const titleSlot = document.createElement("slot");
+    titleSlot.slot = "channel-pref-title";
+    titleSlot.textContent = channelName;
+
+    const logo = document.createElement("img");
+    logo.slot = "channel-logo";
+    logo.src = imageUrl;
+    logo.alt = "";
+
+    const form = document.createElement(AdsChannelPrefForm.elementName);
+    form.slot = "channel-pref-form";
+    form.setAttribute("channel-id", channelId);
+    form.setAttribute("channel-name", channelName);
+    form.setAttribute("image-url", imageUrl);
+
+    this.append(titleSlot, logo, form);
   };
 }
 
