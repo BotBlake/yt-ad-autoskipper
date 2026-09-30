@@ -2,7 +2,7 @@
   "name": "yt-ad-autoskipper",
   "version": "1.0.0",
   "description": "Auto-clicks YouTube's Skip Ad button and closes overlay ads.",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "copy": "rm -rf build && cp -R src/dist build && cp LICENSE.md build",
     "dev": "NODE_ENV=development npm run rollup:watch",
