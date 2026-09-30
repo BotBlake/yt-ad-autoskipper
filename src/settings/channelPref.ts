@@ -34,7 +34,16 @@ const CSS = `
   flex: 1;
 }`;
 
-const TEMPLATE = `
+export class AdsChannelPref extends HTMLElement {
+  static elementName = "ads-channel-pref";
+
+  constructor() {
+    super();
+
+    const style = document.createElement("style");
+    style.textContent = CSS;
+    const body = document.createElement("template");
+    body.innerHTML = `
 <div class="channel-pref-header">
   <button role="button" class="back-btn">&lt;</button>
   <h2 class="channel-pref-title">
@@ -46,17 +55,6 @@ const TEMPLATE = `
 </div>
 <slot name="channel-pref-form"></slot>
 `;
-
-export class AdsChannelPref extends HTMLElement {
-  static elementName = "ads-channel-pref";
-
-  constructor() {
-    super();
-
-    const style = document.createElement("style");
-    style.textContent = CSS;
-    const body = document.createElement("template");
-    body.innerHTML = TEMPLATE;
 
     const root = this.attachShadow({ mode: "open" });
     root.append(style, body.content);

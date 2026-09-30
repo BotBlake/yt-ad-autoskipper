@@ -3,7 +3,7 @@
   "short_name": "ad skipper",
   "description": "Auto-clicks YouTube's Skip Ad button and closes overlay ads.",
   "manifest_version": 3,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "BotBlake",
   "homepage_url": "https://github.com/BotBlake/yt-ad-autoskipper",
   "content_scripts": [

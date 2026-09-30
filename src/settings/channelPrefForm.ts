@@ -59,31 +59,6 @@ const CSS = `
   text-transform: none;
 }`;
 
-const TEMPLATE = `
-<form>
-  <fieldset class="pref-box">
-    <label class="pref-row">
-      <div class="label">
-        <span>Mute Ads</span>
-        <p class="pref-desc">Ads will be muted when they start playing.</p>
-      </div>
-      <input type="checkbox" name="mutead" />
-    </label>
-    <label class="pref-row">
-      <div class="label">
-        <span>Seconds to play ad before skipping</span>
-        <p class="pref-desc">
-          Ads will play for the supplied number of seconds before they are
-          skiped. The default value is 5 seconds as that is when YouTube
-          makes the "Skip Ad" button visible, but the value can be as low as
-          0, where you won't see any ads.
-        </p>
-      </div>
-      <input type="number" name="skipsecs" />
-    </label>
-  </fieldset>
-</form>`;
-
 type State = {
   isMute: boolean;
   skipSecs: number;
@@ -112,7 +87,30 @@ export class AdsChannelPrefForm extends HTMLElement {
     const style = document.createElement("style");
     style.textContent = CSS;
     const body = document.createElement("template");
-    body.innerHTML = TEMPLATE;
+    body.innerHTML = `
+<form>
+  <fieldset class="pref-box">
+    <label class="pref-row">
+      <div class="label">
+        <span>Mute Ads</span>
+        <p class="pref-desc">Ads will be muted when they start playing.</p>
+      </div>
+      <input type="checkbox" name="mutead" />
+    </label>
+    <label class="pref-row">
+      <div class="label">
+        <span>Seconds to play ad before skipping</span>
+        <p class="pref-desc">
+          Ads will play for the supplied number of seconds before they are
+          skiped. The default value is 5 seconds as that is when YouTube
+          makes the "Skip Ad" button visible, but the value can be as low as
+          0, where you won't see any ads.
+        </p>
+      </div>
+      <input type="number" name="skipsecs" />
+    </label>
+  </fieldset>
+</form>`;
 
     const root = this.attachShadow({ mode: "open" });
     root.append(style, body.content);

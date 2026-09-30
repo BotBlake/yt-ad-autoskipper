@@ -1,6 +1,6 @@
 {
   "name": "yt-ad-autoskipper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Auto-clicks YouTube's Skip Ad button and closes overlay ads.",
   "private": true,
   "scripts": {
