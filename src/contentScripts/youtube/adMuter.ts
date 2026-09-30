@@ -9,6 +9,8 @@ import { Events, YouTubeEvents } from "../../utils/youtubeEvents";
 import { EventHandler } from "../../utils/types";
 
 export class AdMuter implements EventHandler {
+  #mutedByExtension = false;
+
   public setupListeners(): void {
     YouTubeEvents.addListener(Events.adPlayStarted, () =>
       this.handleAdPlaybackStart()
@@ -26,15 +28,18 @@ export class AdMuter implements EventHandler {
     if (await getShouldMuteAd(channelId)) {
       logger.debug("video is NOT muted. Click button.");
       clickMuteBtn();
+      this.#mutedByExtension = true;
     } else {
       logger.debug("Not muting ad for this channel: ", channelId);
     }
   }
 
   private resetSound(): void {
-    if (isVideoMuted()) {
+    if (this.#mutedByExtension && isVideoMuted()) {
       logger.debug("resetting audio.");
       clickMuteBtn();
     }
+
+    this.#mutedByExtension = false;
   }
 }
