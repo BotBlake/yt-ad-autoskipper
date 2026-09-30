@@ -10,13 +10,11 @@
     {
       "matches": ["*://*.youtube.com/*"],
       "js": ["./youtube.js"],
-      "all_frames": true,
       "run_at": "document_end"
     },
     {
       "matches": ["*://*.youtube.com/*"],
       "js": ["./youtube_override.js"],
-      "all_frames": true,
       "run_at": "document_start",
       "world": "MAIN"
     }
