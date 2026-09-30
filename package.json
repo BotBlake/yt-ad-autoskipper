@@ -1,7 +1,7 @@
 {
   "name": "yt-ad-autoskipper",
   "version": "1.0.0",
-  "description": "An extension that auto skips ads after YouTube provides a skip ad button. It does not block an ad.",
+  "description": "Auto-clicks YouTube's Skip Ad button and closes overlay ads.",
   "main": "index.js",
   "scripts": {
     "copy": "rm -rf build && cp -R src/dist build && cp LICENSE.md build",
@@ -23,6 +23,9 @@
     "BotBlake <b0tblake@protonmail.com>"
   ],
   "license": "GPL-3.0",
+  "engines": {
+    "node": ">=24"
+  },
   "bugs": {
     "url": "https://github.com/BotBlake/yt-ad-autoskipper/issues"
   },

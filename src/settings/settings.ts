@@ -127,7 +127,7 @@ class AdsSettings extends HTMLElement {
   }
 
   render = () => {
-    this.innerHTML = "";
+    this.replaceChildren();
 
     if (this.state.page === "channel") {
       const { channelId, channelName, imageUrl } = this.state.pageProps;

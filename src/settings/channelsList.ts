@@ -64,12 +64,12 @@ const TEMPLATE = `
   <div class="pref-box empty-channel-list">
     <p>You have not configured any channels yet!</p>
     <p>
-      Find Ad Skipper besides the Subscribe button when watching a YouTube
+      Find Ad Skipper below the video description when watching a YouTube
       video. Click on it to configure the extension for that channel.
     </p>
     <img
       src="./preview.png"
-      alt="Pointing out Ad Skipper button besides Subscribe button in YouTube."
+      alt="Pointing out Ad Skipper button below the video description in YouTube."
     />
   </div>
 </slot>
@@ -131,16 +131,19 @@ export class AdsChannelList extends HTMLElement {
   render = () => {
     if (!this.shadowRoot) return;
 
-    this.innerHTML = "";
+    this.replaceChildren();
 
-    const ul =
-      this.shadowRoot.querySelector("ul") || document.createElement("ul");
+    let ul = this.shadowRoot.querySelector("ul");
 
     if (!this.state.channels?.length) {
+      ul?.remove();
+
       return;
     }
 
-    if (ul) ul.innerHTML = "";
+    if (!ul) ul = document.createElement("ul");
+
+    ul.replaceChildren();
 
     for (const channel of this.state.channels) {
       const li = document.createElement("li");
@@ -151,12 +154,17 @@ export class AdsChannelList extends HTMLElement {
           channel: channel,
         });
       };
-      li.innerHTML = `
-        <img src=${channel.imageUrl} alt="" />
-        <span class="label">
-          ${channel.channelName}
-        </span>
-      `;
+
+      const img = document.createElement("img");
+      img.src = channel.imageUrl;
+      img.alt = "";
+
+      const label = document.createElement("span");
+      label.className = "label";
+      label.textContent = channel.channelName;
+
+      li.append(img, label);
+
       const btn = document.createElement("button");
       btn.className = "remove-channel-btn";
       btn.setAttribute("role", "button");
@@ -167,11 +175,14 @@ export class AdsChannelList extends HTMLElement {
         removeChannel(channel.channelId);
       };
       li.append(btn);
-      ul?.append(li);
+      ul.append(li);
     }
 
     if (!ul.parentElement) this.shadowRoot.prepend(ul);
-    this.innerHTML = `<slot slot="empty-list"></slot>`;
+
+    const emptyListOverride = document.createElement("slot");
+    emptyListOverride.slot = "empty-list";
+    this.replaceChildren(emptyListOverride);
   };
 }
 
