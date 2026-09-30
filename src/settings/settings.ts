@@ -51,7 +51,21 @@ h2.title {
 }
 `;
 
-const template = `
+class AdsSettings extends HTMLElement {
+  static elementName = "ads-settings";
+
+  _state: State = {
+    page: "pref",
+    pageProps: {},
+  };
+
+  constructor() {
+    super();
+
+    const style = document.createElement("style");
+    style.textContent = css;
+    const body = document.createElement("template");
+    body.innerHTML = `
 <div class="container">
   <h1>Youtube Ad Auto-skipper</h1>
   <slot name="config">
@@ -82,22 +96,6 @@ const template = `
     </div>
   </slot>
 </div>`;
-
-class AdsSettings extends HTMLElement {
-  static elementName = "ads-settings";
-
-  _state: State = {
-    page: "pref",
-    pageProps: {},
-  };
-
-  constructor() {
-    super();
-
-    const style = document.createElement("style");
-    style.textContent = css;
-    const body = document.createElement("template");
-    body.innerHTML = template;
 
     const root = this.attachShadow({ mode: "open" });
     root.append(style, body.content);

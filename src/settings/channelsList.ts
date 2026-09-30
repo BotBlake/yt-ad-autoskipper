@@ -59,22 +59,6 @@ const CSS = `
   text-decoration: none;
 }`;
 
-const TEMPLATE = `
-<slot name="empty-list">
-  <div class="pref-box empty-channel-list">
-    <p>You have not configured any channels yet!</p>
-    <p>
-      Find Ad Skipper below the video description when watching a YouTube
-      video. Click on it to configure the extension for that channel.
-    </p>
-    <img
-      src="./preview.png"
-      alt="Pointing out Ad Skipper button below the video description in YouTube."
-    />
-  </div>
-</slot>
-`;
-
 type State = {
   channels: ChannelConfig[];
 };
@@ -101,7 +85,21 @@ export class AdsChannelList extends HTMLElement {
     const style = document.createElement("style");
     style.textContent = CSS;
     const body = document.createElement("template");
-    body.innerHTML = TEMPLATE;
+    body.innerHTML = `
+<slot name="empty-list">
+  <div class="pref-box empty-channel-list">
+    <p>You have not configured any channels yet!</p>
+    <p>
+      Find Ad Skipper below the video description when watching a YouTube
+      video. Click on it to configure the extension for that channel.
+    </p>
+    <img
+      src="./preview.png"
+      alt="Pointing out Ad Skipper button below the video description in YouTube."
+    />
+  </div>
+</slot>
+`;
 
     const root = this.attachShadow({ mode: "open" });
     root.append(style, body.content);
